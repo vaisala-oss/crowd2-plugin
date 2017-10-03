@@ -25,8 +25,8 @@
  */
 package de.theit.jenkins.crowd;
 
+import jenkins.model.Jenkins;
 import hudson.Extension;
-import hudson.model.Hudson;
 import hudson.model.User;
 import hudson.security.SecurityRealm;
 import hudson.tasks.MailAddressResolver;
@@ -58,7 +58,7 @@ public class CrowdMailAddressResolverImpl extends MailAddressResolver {
 	@Override
 	public String findMailAddressFor(User u) {
 		String mail = null;
-		SecurityRealm realm = Hudson.getInstance().getSecurityRealm();
+		SecurityRealm realm = Jenkins.getInstance().getSecurityRealm();
 
 		if (realm instanceof CrowdSecurityRealm) {
 			try {

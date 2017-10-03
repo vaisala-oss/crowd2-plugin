@@ -37,6 +37,7 @@ import static de.theit.jenkins.crowd.ErrorMessages.specifyCrowdUrl;
 import static de.theit.jenkins.crowd.ErrorMessages.specifySessionValidationInterval;
 import static de.theit.jenkins.crowd.ErrorMessages.userNotFound;
 import static de.theit.jenkins.crowd.ErrorMessages.userNotValid;
+import jenkins.model.Jenkins;
 import hudson.Extension;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
@@ -262,7 +263,7 @@ public class CrowdSecurityRealm extends AbstractPasswordBasedSecurityRealm {
 	@Override
 	public void doLogout(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException {
-		SecurityRealm realm = Hudson.getInstance().getSecurityRealm();
+		SecurityRealm realm = Jenkins.getInstance().getSecurityRealm();
 
         if (useSSO) {
             if (realm instanceof CrowdSecurityRealm
@@ -436,7 +437,7 @@ public class CrowdSecurityRealm extends AbstractPasswordBasedSecurityRealm {
 		 *         browser.
 		 */
 		public FormValidation doCheckUrl(@QueryParameter final String url) {
-			if (!Hudson.getInstance().hasPermission(Hudson.ADMINISTER)) {
+			if (!Jenkins.getInstance().hasPermission(Hudson.ADMINISTER)) {
 				return FormValidation.ok();
 			}
 
@@ -458,7 +459,7 @@ public class CrowdSecurityRealm extends AbstractPasswordBasedSecurityRealm {
 		 */
 		public FormValidation doCheckApplicationName(
 				@QueryParameter final String applicationName) {
-			if (!Hudson.getInstance().hasPermission(Hudson.ADMINISTER)) {
+			if (!Jenkins.getInstance().hasPermission(Hudson.ADMINISTER)) {
 				return FormValidation.ok();
 			}
 
@@ -480,7 +481,7 @@ public class CrowdSecurityRealm extends AbstractPasswordBasedSecurityRealm {
 		 */
 		public FormValidation doCheckPassword(
 				@QueryParameter final String password) {
-			if (!Hudson.getInstance().hasPermission(Hudson.ADMINISTER)) {
+			if (!Jenkins.getInstance().hasPermission(Hudson.ADMINISTER)) {
 				return FormValidation.ok();
 			}
 
@@ -502,13 +503,13 @@ public class CrowdSecurityRealm extends AbstractPasswordBasedSecurityRealm {
 		 */
 		public FormValidation doCheckSessionValidationInterval(
 				@QueryParameter final String sessionValidationInterval) {
-			if (!Hudson.getInstance().hasPermission(Hudson.ADMINISTER)) {
+			if (!Jenkins.getInstance().hasPermission(Hudson.ADMINISTER)) {
 				return FormValidation.ok();
 			}
 
 			try {
 				if (0 == sessionValidationInterval.length()
-						|| Integer.valueOf(sessionValidationInterval) < 0) {
+						|| Integer.parseInt(sessionValidationInterval) < 0) {
 					return FormValidation.error(specifySessionValidationInterval());
 				}
 			} catch (NumberFormatException ex) {

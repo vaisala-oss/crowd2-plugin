@@ -49,6 +49,7 @@ import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.ui.rememberme.RememberMeServices;
 
 import com.atlassian.crowd.exception.OperationFailedException;
+import com.atlassian.crowd.integration.AuthenticationState;
 
 /**
  * This class realizes a servlet filter that checks on each request the status
@@ -136,8 +137,8 @@ public class CrowdServletFilter implements Filter {
 			// if it is not present, we are not / no longer authenticated
 			boolean isValidated = false;
 			try {
-				isValidated = this.configuration.crowdHttpAuthenticator
-						.isAuthenticated(req, res);
+				AuthenticationState authState = this.configuration.crowdHttpAuthenticator.checkAuthenticated(req, res);
+				isValidated = authState.isAuthenticated();
 			} catch (OperationFailedException ex) {
 				LOG.log(Level.SEVERE, operationFailed(), ex);
 			}
